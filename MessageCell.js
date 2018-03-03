@@ -5,14 +5,22 @@ import { StyleSheet, Text, View } from 'react-native';
 export default class MessageCell extends React.Component {
   render() {
     const { message } = this.props;
-    return (
-      <View style={styles.cell}>
-        <View style={message.isMyMessage ? styles.myMessage : styles.otherMessage}>
-          <Text style={{fontSize: 20}}>{message.text}</Text>
-          <Text style={{fontSize: 12, fontStyle: 'italic'}}>{message.author}</Text>
+    if (message.isServiceMessage) {
+      return (
+        <View style={styles.serviceCell}>
+          <Text style={styles.serviceText}>{message.text}</Text>
         </View>
-      </View>
-    );
+      )
+    } else {
+      return (
+        <View style={styles.cell}>
+          <View style={message.isMyMessage ? styles.myMessage : styles.otherMessage}>
+            <Text style={{fontSize: 20}}>{message.text}</Text>
+            <Text style={{fontSize: 12, fontStyle: 'italic'}}>{message.author}</Text>
+          </View>
+        </View>
+      );
+    }
   }
 }
 
@@ -52,5 +60,17 @@ const styles = StyleSheet.create({
   otherMessage: {
     borderColor: 'red',
     alignItems: 'flex-start'
+  },
+  serviceCell: {
+    backgroundColor: 'gray',
+    height: 30,
+    marginTop: 20,
+    marginBottom: 20,
+    alignItems: 'center'
+  },
+  serviceText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
   }
 });

@@ -19,9 +19,16 @@ export default class ChatScreen extends React.Component {
     this.socket = params.socket;
     this.nickname = params.nickname;
     console.log("Params", params);
-    this.socket.on('user_connected', (data) => {
+    this.willBlurSubscription = this.props.navigation.addListener(
+      'willBlur', payload => {
+        this.willBlur();
+      }
+    );
+    
+    // Remove the listener when you are done
+    // this.socket.on('user_connected', (data) => {
 
-    });
+    // });
     this.socket.on('message', (message) => {
       //alert("Got message " + JSON.stringify(message));
       message.isMyMessage = false;
@@ -35,6 +42,11 @@ export default class ChatScreen extends React.Component {
       inputText: "",
       messages: []
     };
+  }
+
+  willBlur() {
+    this.socket.close();
+    this.willBlurSubscription.remove();
   }
 
   render() {

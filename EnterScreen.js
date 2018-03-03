@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, KeyboardAvoidingView } from 'react-native';
 import SocketIOClient from 'socket.io-client';
 
 
@@ -7,7 +7,7 @@ export default class EnterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: "http://192.168.0.103:3000",
+      url: "http://192.168.0.102:3000",
       nickname: "",
       chatButtonDisabled: true
     };
@@ -24,11 +24,15 @@ export default class EnterScreen extends React.Component {
     console.log(url, nickname);
     const socket = SocketIOClient(url, { transports: ["websocket"] });
     socket.on('connect', () => {
+      socket.emit('login', { nickname: this.state.nickname });
       this.props.navigation.navigate('ChatScreen', { socket, nickname });
     });
 
     socket.on('connect_error', (error) => {
-      alert("Connection error");
+      if (this.connectionErrorNotVisible) {
+        alert("Connection error");
+        this.connectionErrorNotVisible = false;
+      } 
     });
     socket.connect();
   }
@@ -59,6 +63,7 @@ export default class EnterScreen extends React.Component {
           value={this.state.nickname}
         />
         <Button color="orange" onPress={ () => {
+          this.connectionErrorNotVisible = true;
           this.connect();
         } } title="Начать чат" disabled={this.state.chatButtonDisabled} /> 
       </View>
@@ -72,13 +77,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'stretch',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     padding: 50
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 100
+    marginTop: 10
   },
   textInput: {
     height: 44,

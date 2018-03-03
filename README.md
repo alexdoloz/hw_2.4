@@ -11,4 +11,4 @@
 ## Запустить сервер
 - `cd <path/to/project>/server`
 - `npm install`
-- `node index.js`
+- `node server.js`

@@ -7,15 +7,20 @@ const port = 3000;
 const messages = [];
 
 io.on('connect', (socket) => {
-    socket.broadcast.emit('message', {
-        text: `${socket.id} connected`,
-        author: "Socket Chat"
-    });
     console.log("Connected ", socket.id);
     socket.on('message', (message) => {
         messages.push(message);
         console.log('message ', JSON.stringify(message));
         socket.broadcast.emit('message', message);
+    });
+    socket.on('login', (message) => {
+        const { nickname } = message;
+        console.log('login ', nickname);
+        socket.broadcast.emit('message', {
+            text: `${nickname} connected`,
+            author: "Socket Chat",
+            isServiceMessage: true
+        });
     });
 });
 
