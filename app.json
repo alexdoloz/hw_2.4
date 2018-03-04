@@ -1,4 +1,7 @@
 {
+  "name": "SocketChat",
+  "displayName": "SocketChat",
+  "entryPoint": "App.js",
   "expo": {
     "name": "SocketChat",
     "description": "This project is really great.",
